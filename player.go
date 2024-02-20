@@ -1,9 +1,9 @@
-package engine
+package tundra
 
 type Player struct {
 	CurLoc            *Location
-	Inventory         []*Object
-	AdditionalContext []*Object
+	Inventory         map[string]*Object
+	AdditionalContext map[string]*Object
 	Commands          map[string]Command
 }
 type PlayerOption func(*Player)
@@ -24,21 +24,15 @@ func WithStartingLocation(l *Location) PlayerOption {
 	}
 }
 
-func WithStartingInventory(inventory []*Object) PlayerOption {
+func WithStartingInventory(inventory map[string]*Object) PlayerOption {
 	return func(p *Player) {
 		p.Inventory = inventory
 	}
 }
 
-func WithAdditionalContext(context []*Object) PlayerOption {
+func WithAdditionalContext(context map[string]*Object) PlayerOption {
 	return func(p *Player) {
 		p.AdditionalContext = context
-	}
-}
-
-func WithInitialCommands(commands map[string]Command) PlayerOption {
-	return func(p *Player) {
-		p.Commands = commands
 	}
 }
 
@@ -48,4 +42,12 @@ func (p *Player) AddCommand(name string, command Command) {
 
 func (p *Player) RemoveCommand(name string) {
 	delete(p.Commands, name)
+}
+
+func (p *Player) AddObject(name string, object *Object) {
+	p.Inventory[name] = object
+}
+
+func (p *Player) RemoveObject(name string) {
+	delete(p.Inventory, name)
 }
