@@ -24,6 +24,9 @@ func WithDescription(description string) ObjectOption {
 }
 
 func (o *Object) AddCommand(name string, command Command) {
+	if o.Commands == nil {
+		o.Commands = make(map[string]Command, 0)
+	}
 	o.Commands[name] = command
 }
 
@@ -32,6 +35,9 @@ func (o *Object) RemoveCommand(name string) {
 }
 
 func (o *Object) AddObject(name string, object *Object) {
+	if o.ContainedObjs == nil {
+		o.ContainedObjs = make(map[string]*Object, 0)
+	}
 	o.ContainedObjs[name] = object
 }
 

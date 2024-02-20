@@ -24,7 +24,7 @@ func run() error {
 		[]*tundra.Location{},
 	)
 
-	fmt.Println(universe)
+	fmt.Printf("%#v\n", universe)
 
 	return nil
 }

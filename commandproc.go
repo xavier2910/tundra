@@ -1,6 +1,9 @@
 package tundra
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type CommandResultType int
 
@@ -22,10 +25,11 @@ type CommandResults struct {
 type CommandProcessor struct {
 	commandContext map[string]Command
 	objectContext  map[string]*Object
+	universe       *World
 }
 
-func NewCommandProcessor() *CommandProcessor {
-	return &CommandProcessor{}
+func NewCommandProcessor(wrld *World) *CommandProcessor {
+	return &CommandProcessor{universe: wrld}
 }
 
 func (cp *CommandProcessor) ClearCommandContext() {
@@ -82,12 +86,16 @@ func (cp *CommandProcessor) AppendObjectContext(additionalContext map[string]*Ob
 	}
 }
 
-func (cp *CommandProcessor) Execute(cmd string, universe *World) (CommandResults, error) {
+func (cp *CommandProcessor) Execute(command string) (CommandResults, error) {
 
-	cmd, args := cp.preprocess(cmd)
+	cmd, args := cp.preprocess(command)
 	parsedcmd, targets := cp.resolve(cmd, args)
 
-	return parsedcmd(targets, universe)
+	if parsedcmd != nil {
+		return parsedcmd(targets, cp.universe)
+	} else {
+		return CommandResults{Msg: []string{"bad cmd"}}, fmt.Errorf("cmd '%s' is not available", command)
+	}
 }
 
 func (cp *CommandProcessor) preprocess(cmd string) (string, []string) {

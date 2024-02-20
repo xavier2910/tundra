@@ -17,6 +17,9 @@ func (l *Location) RemoveConnection(dir Direction) {
 }
 
 func (l *Location) AddCommand(name string, command Command) {
+	if l.Commands == nil {
+		l.Commands = make(map[string]Command, 0)
+	}
 	l.Commands[name] = command
 }
 
@@ -25,6 +28,9 @@ func (l *Location) RemoveCommand(name string) {
 }
 
 func (l *Location) AddObject(name string, object *Object) {
+	if l.Objects == nil {
+		l.Objects = make(map[string]*Object, 0)
+	}
 	l.Objects[name] = object
 }
 

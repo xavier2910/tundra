@@ -37,6 +37,9 @@ func WithAdditionalContext(context map[string]*Object) PlayerOption {
 }
 
 func (p *Player) AddCommand(name string, command Command) {
+	if p.Commands == nil {
+		p.Commands = make(map[string]Command, 0)
+	}
 	p.Commands[name] = command
 }
 
@@ -45,6 +48,9 @@ func (p *Player) RemoveCommand(name string) {
 }
 
 func (p *Player) AddObject(name string, object *Object) {
+	if p.Inventory == nil {
+		p.Inventory = make(map[string]*Object, 0)
+	}
 	p.Inventory[name] = object
 }
 
