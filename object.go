@@ -2,18 +2,17 @@ package tundra
 
 type Object struct {
 	Description   string
-	ContainedObjs map[string]*Object
-	Commands      map[string]Command
+	containedObjs map[string]*Object
+	commands      map[string]Command
 }
 type ObjectOption func(*Object)
 
 func NewObject(options ...ObjectOption) *Object {
-	o := &Object{}
 
+	o := &Object{}
 	for _, option := range options {
 		option(o)
 	}
-
 	return o
 }
 
@@ -24,23 +23,36 @@ func WithDescription(description string) ObjectOption {
 }
 
 func (o *Object) AddCommand(name string, command Command) {
-	if o.Commands == nil {
-		o.Commands = make(map[string]Command, 0)
+	if o.commands == nil {
+		o.commands = make(map[string]Command, 0)
 	}
-	o.Commands[name] = command
+	o.commands[name] = command
+}
+
+func (o *Object) GetCommand(name string) Command {
+	if o.commands == nil {
+		return nil
+	}
+	return o.commands[name]
 }
 
 func (o *Object) RemoveCommand(name string) {
-	delete(o.Commands, name)
+	if o.commands == nil {
+		return
+	}
+	delete(o.commands, name)
 }
 
 func (o *Object) AddObject(name string, object *Object) {
-	if o.ContainedObjs == nil {
-		o.ContainedObjs = make(map[string]*Object, 0)
+	if o.containedObjs == nil {
+		o.containedObjs = make(map[string]*Object, 0)
 	}
-	o.ContainedObjs[name] = object
+	o.containedObjs[name] = object
 }
 
 func (o *Object) RemoveObject(name string) {
-	delete(o.ContainedObjs, name)
+	if o.commands == nil {
+		return
+	}
+	delete(o.containedObjs, name)
 }

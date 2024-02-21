@@ -4,7 +4,7 @@ type Player struct {
 	CurLoc            *Location
 	Inventory         map[string]*Object
 	AdditionalContext map[string]*Object
-	Commands          map[string]Command
+	commands          map[string]Command
 }
 type PlayerOption func(*Player)
 
@@ -37,16 +37,27 @@ func WithAdditionalContext(context map[string]*Object) PlayerOption {
 }
 
 func (p *Player) AddCommand(name string, command Command) {
-	if p.Commands == nil {
-		p.Commands = make(map[string]Command, 0)
+	if p.commands == nil {
+		p.commands = make(map[string]Command, 0)
 	}
-	p.Commands[name] = command
+	p.commands[name] = command
+}
+
+func (p *Player) GetCommand(name string) Command {
+	if p.commands == nil {
+		return nil
+	}
+	return p.commands[name]
 }
 
 func (p *Player) RemoveCommand(name string) {
-	delete(p.Commands, name)
+	if p.commands == nil {
+		return
+	}
+	delete(p.commands, name)
 }
 
+// adds to inventory
 func (p *Player) AddObject(name string, object *Object) {
 	if p.Inventory == nil {
 		p.Inventory = make(map[string]*Object, 0)
@@ -54,6 +65,7 @@ func (p *Player) AddObject(name string, object *Object) {
 	p.Inventory[name] = object
 }
 
+// adds to inventory
 func (p *Player) RemoveObject(name string) {
 	delete(p.Inventory, name)
 }

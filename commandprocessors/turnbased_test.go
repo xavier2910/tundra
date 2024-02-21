@@ -6,6 +6,56 @@ import (
 	"github.com/xavier2910/tundra"
 )
 
+func TestPreprocess(t *testing.T) {
+
+	cp := NewTurnBased(tundra.NewWorld(tundra.NewPlayer(), []*tundra.Location{}))
+
+	t.Run("NulladCommand", func(t *testing.T) {
+		owner, cmd, args := cp.preprocess("inventory")
+		cmdwant := "inventory"
+		if cmd != cmdwant {
+			t.Errorf("want command %s, got %s", cmdwant, cmd)
+		}
+		if len(owner) != 0 {
+			t.Errorf("want empty owner, got %s", owner)
+		}
+		if len(args) != 0 {
+			t.Errorf("want no args, got %#v", args)
+		}
+	})
+
+	t.Run("MonadCommand", func(t *testing.T) {
+		owner, cmd, args := cp.preprocess("push button")
+		cmdwant := "push"
+		ownerwant := "button"
+		if cmd != cmdwant {
+			t.Errorf("want command %s, got %s", cmdwant, cmd)
+		}
+		if owner != ownerwant {
+			t.Errorf("want owner %s, got %s", ownerwant, owner)
+		}
+		if len(args) != 0 {
+			t.Errorf("want no args, got %#v", args)
+		}
+	})
+
+	t.Run("PolyadCommand", func(t *testing.T) {
+		owner, cmd, args := cp.preprocess("puton table plate cup food")
+		cmdwant := "puton"
+		ownerwant := "table"
+		lenargswant := 3
+		if cmd != cmdwant {
+			t.Errorf("want command %s, got %s", cmdwant, cmd)
+		}
+		if owner != ownerwant {
+			t.Errorf("want owner %s, got %s", ownerwant, owner)
+		}
+		if len(args) != lenargswant {
+			t.Errorf("want %d args (plate, cup, food), got %d (%#v)", lenargswant, len(args), args)
+		}
+	})
+}
+
 func TestUpdateContext(t *testing.T) {
 
 	teleporterDesc := "The teleporter is equipped with a single button."
@@ -20,24 +70,24 @@ func TestUpdateContext(t *testing.T) {
 	hand := tundra.NewObject()
 
 	teleporter.AddObject("button", button)
-	teleporter.AddCommand("examine", func(o []*tundra.Object, w *tundra.World) (tundra.CommandResults, error) {
+	teleporter.AddCommand("examine", func(o []*tundra.Object) (tundra.CommandResults, error) {
 		return tundra.CommandResults{
 			Msg: []string{
 				o[0].Description,
 			},
 		}, nil
 	})
-	button.AddCommand("examine", func(o []*tundra.Object, w *tundra.World) (tundra.CommandResults, error) {
+	button.AddCommand("examine", func(o []*tundra.Object) (tundra.CommandResults, error) {
 		return tundra.CommandResults{
 			Msg: []string{
 				o[0].Description,
 			},
 		}, nil
 	})
-	fish.AddCommand("flop", func(o []*tundra.Object, w *tundra.World) (tundra.CommandResults, error) {
+	fish.AddCommand("flop", func(o []*tundra.Object) (tundra.CommandResults, error) {
 		return tundra.CommandResults{Msg: []string{"flop!"}}, nil
 	})
-	hand.AddCommand("grab", func(o []*tundra.Object, w *tundra.World) (tundra.CommandResults, error) {
+	hand.AddCommand("grab", func(o []*tundra.Object) (tundra.CommandResults, error) {
 		return tundra.CommandResults{}, nil
 	})
 
@@ -55,7 +105,7 @@ func TestUpdateContext(t *testing.T) {
 					"teleporter": teleporter,
 				},
 				Commands: map[string]tundra.Command{
-					"locationcommandexample": func(o []*tundra.Object, w *tundra.World) (tundra.CommandResults, error) {
+					"locationcommandexample": func(o []*tundra.Object) (tundra.CommandResults, error) {
 						return tundra.CommandResults{}, nil
 					},
 				},
@@ -64,7 +114,7 @@ func TestUpdateContext(t *testing.T) {
 	)
 	world.PlayerData.CurLoc = world.Places[0]
 	world.PlayerData.AddObject("fish", fish)
-	world.PlayerData.AddCommand("playercommandexample", func(o []*tundra.Object, w *tundra.World) (tundra.CommandResults, error) {
+	world.PlayerData.AddCommand("playercommandexample", func(o []*tundra.Object) (tundra.CommandResults, error) {
 		return tundra.CommandResults{}, nil
 	})
 
@@ -72,28 +122,18 @@ func TestUpdateContext(t *testing.T) {
 	cp.UpdateContext()
 
 	t.Run("PlayerInventoryObject", func(t *testing.T) {
-		if cp.commandContext["flop"] == nil {
-			t.Errorf("failed to load player inventory object command")
+		if cp.context["fish"] != nil {
+			t.Errorf("loaded player inventory object \"%s\", should not load these!", "fish")
 		}
 	})
 	t.Run("PlayerAdditionalObject", func(t *testing.T) {
-		if cp.commandContext["grab"] == nil {
+		if cp.context["hand"] == nil {
 			t.Errorf("failed to load player additional context object command")
 		}
 	})
 	t.Run("LocationObject", func(t *testing.T) {
-		if cp.commandContext["examine"] == nil {
+		if cp.context["teleporter"] == nil {
 			t.Errorf("failed to load location object command")
-		}
-	})
-	t.Run("Player", func(t *testing.T) {
-		if cp.commandContext["playercommandexample"] == nil {
-			t.Errorf("failed to load player command")
-		}
-	})
-	t.Run("Location", func(t *testing.T) {
-		if cp.commandContext["locationcommandexample"] == nil {
-			t.Errorf("failed to load location command")
 		}
 	})
 }
@@ -130,20 +170,20 @@ func testExecuteExamine(t *testing.T, world *tundra.World, cp *turnBased) func(*
 	)
 
 	teleporter.AddObject("button", button)
-	teleporter.AddCommand("examine", func(o []*tundra.Object, w *tundra.World) (tundra.CommandResults, error) {
+	teleporter.AddCommand("examine", func(o []*tundra.Object) (tundra.CommandResults, error) {
 		return tundra.CommandResults{
 			Result: tundra.Ok,
 			Msg: []string{
-				o[0].Description,
+				teleporter.Description,
 			},
 		}, nil
 	})
 
-	button.AddCommand("examine", func(o []*tundra.Object, w *tundra.World) (tundra.CommandResults, error) {
+	button.AddCommand("examine", func(o []*tundra.Object) (tundra.CommandResults, error) {
 		return tundra.CommandResults{
 			Result: tundra.Ok,
 			Msg: []string{
-				o[0].Description,
+				button.Description,
 			},
 		}, nil
 	})
@@ -161,13 +201,9 @@ func testExecuteExamine(t *testing.T, world *tundra.World, cp *turnBased) func(*
 
 	return func(t *testing.T) {
 
-		cp.clearCommandContext()
-		cp.clearObjectContext()
+		cp.clearContext()
 
-		for _, obj := range world.PlayerData.CurLoc.Objects {
-			cp.addCommandContext(obj.Commands)
-		}
-		cp.addObjectContext(world.PlayerData.CurLoc.Objects)
+		cp.addContext(world.PlayerData.CurLoc.Objects)
 
 		result, err := cp.Execute("examine teleporter")
 
