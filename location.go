@@ -1,19 +1,10 @@
 package tundra
 
 type Location struct {
-	Title              string
-	Description        string
-	Objects            map[string]*Object
-	ConnectedLocations map[Direction]*Location
-	Commands           map[string]Command
-}
-
-func (l *Location) AddConnection(dir Direction, loc *Location) {
-	l.ConnectedLocations[dir] = loc
-}
-
-func (l *Location) RemoveConnection(dir Direction) {
-	delete(l.ConnectedLocations, dir)
+	Title       string
+	Description string
+	Objects     map[string]*Object
+	Commands    map[string]Command
 }
 
 func (l *Location) AddCommand(name string, command Command) {
@@ -21,6 +12,10 @@ func (l *Location) AddCommand(name string, command Command) {
 		l.Commands = make(map[string]Command, 0)
 	}
 	l.Commands[name] = command
+}
+
+func (l *Location) GetCommand(name string) Command {
+	return l.Commands[name]
 }
 
 func (l *Location) RemoveCommand(name string) {
@@ -32,6 +27,10 @@ func (l *Location) AddObject(name string, object *Object) {
 		l.Objects = make(map[string]*Object, 0)
 	}
 	l.Objects[name] = object
+}
+
+func (l *Location) GetObject(name string) *Object {
+	return l.Objects[name]
 }
 
 func (l *Location) RemoveObject(name string) {
