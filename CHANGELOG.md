@@ -1,5 +1,11 @@
 # Changelog for tundra
 
+## Unreleased
+
+### Notes
+
+* removed game to [external project](github.com/xaiver2910/tundragame)
+
 ## v0.1.0
 
 ### Features
