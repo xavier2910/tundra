@@ -27,7 +27,7 @@ type Location struct {
 }
 
 // Connect the location to another via a named object.
-func (l *Location) SetConnection(direction Direction, other *Location, forPlayer *Player) {
+func (l *Location) SetConnection(direction Direction, other *Location, forPlayer *Player, withCP *CommandProcessor) {
 
 	if l.Objects == nil {
 		l.Objects = make(map[string]*Object, 1)
@@ -40,6 +40,8 @@ func (l *Location) SetConnection(direction Direction, other *Location, forPlayer
 	conn := NewObject()
 	conn.AddCommand("go", func(o []*Object) (CommandResults, error) {
 		forPlayer.CurLoc = other
+		(*withCP).UpdateContext()
+
 		return CommandResults{
 			Result: Ok,
 			Msg:    []string{"# " + other.Title + "\n\n" + other.Description},
