@@ -9,6 +9,7 @@
 ### Fixes
 
 * implemented turnBased.InjectContext
+* fixed location connection functionality: update context on move
 
 ## v0.1.0
 
