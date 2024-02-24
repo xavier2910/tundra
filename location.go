@@ -41,7 +41,6 @@ func (l *Location) SetConnection(direction Direction, other *Location, forPlayer
 	conn.AddCommand("go", func(o []*Object) (CommandResults, error) {
 		forPlayer.CurLoc = other
 		(*withCP).UpdateContext()
-
 		return CommandResults{
 			Result: Ok,
 			Msg:    []string{"# " + other.Title + "\n\n" + other.Description},
