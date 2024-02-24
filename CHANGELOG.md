@@ -6,6 +6,10 @@
 
 * removed game to [external project](github.com/xaiver2910/tundragame)
 
+### Fixes
+
+* implemented turnBased.InjectContext
+
 ## v0.1.0
 
 ### Features

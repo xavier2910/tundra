@@ -138,6 +138,22 @@ func TestUpdateContext(t *testing.T) {
 	})
 }
 
+func TestInjectContext(t *testing.T) {
+	world := tundra.NewWorld(
+		tundra.NewPlayer(),
+		[]*tundra.Location{},
+	)
+
+	cp := NewTurnBased(world)
+
+	fish := tundra.NewObject()
+	cp.InjectContext("fish", fish)
+
+	if cp.context["fish"] == nil {
+		t.Errorf("want fish %#v, but got nil (ie failed to load fish)", fish)
+	}
+}
+
 func TestExecute(t *testing.T) {
 	world := tundra.NewWorld(
 		tundra.NewPlayer(),

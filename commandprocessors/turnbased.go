@@ -28,8 +28,12 @@ func (cp *turnBased) UpdateContext() {
 	cp.appendContext(cp.universe.PlayerData.CurLoc.Objects)
 }
 
+// overwrites in case of duplicate
 func (cp *turnBased) InjectContext(name string, item *tundra.Object) {
-
+	if cp.context == nil {
+		cp.context = make(map[string]*tundra.Object, 1)
+	}
+	cp.context[name] = item
 }
 
 func (cp *turnBased) clearContext() {
