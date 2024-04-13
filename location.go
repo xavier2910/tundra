@@ -11,6 +11,8 @@ const (
 	Southwest Direction = "sw"
 	West      Direction = "w"
 	Northwest Direction = "nw"
+	Up        Direction = "u"
+	Down      Direction = "d"
 )
 
 // A logical place in the virtual universe of the game.
