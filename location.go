@@ -1,5 +1,7 @@
 package tundra
 
+import "fmt"
+
 type Direction string
 
 const (
@@ -30,6 +32,14 @@ type Location struct {
 	Commands    map[string]Command
 }
 
+func (l *Location) Describe() (description string) {
+	description = l.Description
+	for oname := range l.Objects {
+		description = fmt.Sprintf("%s. There is a %s here.", description, oname)
+	}
+	return
+}
+
 // Connect the location to another via a named object.
 func (l *Location) SetConnection(direction Direction, other *Location, forPlayer *Player, withCP CommandProcessor) {
 
@@ -47,7 +57,7 @@ func (l *Location) SetConnection(direction Direction, other *Location, forPlayer
 		withCP.UpdateContext()
 		return CommandResults{
 			Result: Ok,
-			Msg:    []string{"# " + other.Title + "\n\n" + other.Description},
+			Msg:    []string{"# " + other.Title + "\n\n" + other.Describe()},
 		}, nil
 	})
 	l.Objects[string(direction)] = conn
