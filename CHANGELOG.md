@@ -6,6 +6,7 @@
 
 * added up, down, in, and out directions.
 * added `Describe()` method to `Location` struct to include the objects there.
+* added take and drop command builders to commands package.
 
 ## v0.1.1
 
