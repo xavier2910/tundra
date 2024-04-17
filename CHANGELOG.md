@@ -1,5 +1,12 @@
 # Changelog for tundra
 
+## Unreleased
+
+### Features
+
+* added up, down, in, and out directions.
+* added `Describe()` method to `Location` struct to include the objects there.
+
 ## v0.1.1
 
 ### Notes
@@ -8,7 +15,7 @@
 
 ### Fixes
 
-* implemented turnBased.InjectContext
+* implemented `turnBased.InjectContext()`
 * fixed location connection functionality: update context on move
 
 ## v0.1.0
