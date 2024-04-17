@@ -15,8 +15,8 @@ const (
 	Northwest Direction = "nw"
 	Up        Direction = "u"
 	Down      Direction = "d"
-	In        Direction = "in"
-	Out       Direction = "ot"
+	In        Direction = "i"
+	Out       Direction = "o"
 )
 
 // A logical place in the virtual universe of the game.
@@ -35,7 +35,7 @@ type Location struct {
 func (l *Location) Describe() (description string) {
 	description = l.Description
 	for oname := range l.Objects {
-		description = fmt.Sprintf("%s. There is a %s here.", description, oname)
+		description = fmt.Sprintf("%s There is a %s here.", description, oname)
 	}
 	return
 }

@@ -1,5 +1,11 @@
 # Changelog for tundra
 
+## v0.2.1
+
+### Fixes
+
+* made all single directions one letter \(udio\)
+
 ## v0.2.0
 
 ### Features
