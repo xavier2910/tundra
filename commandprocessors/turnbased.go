@@ -71,7 +71,7 @@ func (cp *turnBased) Execute(command string) (tundra.CommandResults, error) {
 	if parsedcmd != nil {
 		return parsedcmd(targets)
 	} else {
-		return tundra.CommandResults{Msg: []string{"bad cmd"}}, fmt.Errorf("cmd '%s' is not available", command)
+		return tundra.CommandResults{Msg: []string{fmt.Sprintf("You cannot %s the %s.", cmd, owner)}}, fmt.Errorf("cmd '%s' is not available", command)
 	}
 }
 
