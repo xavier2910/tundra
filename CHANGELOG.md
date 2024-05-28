@@ -1,5 +1,11 @@
 # Changelog for tundra
 
+## Unreleased
+
+### Features
+
+* added `GetObject` method to `Object` struct.
+
 ## v0.2.1
 
 ### Fixes
@@ -36,3 +42,4 @@
     as the need arises.
 
 * No game content as yet.
+
