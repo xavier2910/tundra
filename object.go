@@ -50,6 +50,13 @@ func (o *Object) AddObject(name string, object *Object) {
 	o.containedObjs[name] = object
 }
 
+func (o *Object) GetObject(name string, object *Object) *Object {
+	if o.containedObjs == nil {
+		return nil
+	}
+	return o.containedObjs[name]
+}
+
 func (o *Object) RemoveObject(name string) {
 	if o.commands == nil {
 		return
