@@ -4,6 +4,8 @@ The engine library for a second take at [The Tundra](github.com/xavier2910/thetu
 This repository has no game content. You can find the new game
 [here](github.com/xavier2910/tundragame).
 
+I no longer plan on working on this project; at it for 2.5 yrs, 4 iterations (2 on github cause they're the only ones with substantial content), now I'm done.
+
 ## Features
 
 `tundra` contains a domain language for text adventure games, including structures for
